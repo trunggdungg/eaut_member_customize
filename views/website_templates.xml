@@ -269,6 +269,10 @@
 
     <!-- Khối thông tin liên hệ -->
     <template id="member_contact_info" name="Thông tin liên hệ hội viên">
+                <t t-if="member.contact_content">
+            <div t-field="member.contact_content" class="eaut-info"/>
+        </t>
+        <t t-else="">
         <div class="eaut-info">
             <div t-if="member.industry_id" class="mb-2">
                 <i class="fa fa-industry fa-fw"/>
@@ -302,6 +306,7 @@
                 </a>
             </div>
         </div>
+              </t>
     </template>
 
     <!-- Chi tiết bài viết -->

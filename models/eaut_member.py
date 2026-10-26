@@ -18,6 +18,9 @@ class EautMember(models.Model):
     industry_id = fields.Many2one('eaut.member.industry', 'Ngành nghề', tracking=True)
     short_description = fields.Text('Mô tả ngắn')
     description = fields.Html('Giới thiệu', sanitize_attributes=False)
+    contact_content = fields.Html(
+        'Khối thông tin liên hệ', sanitize_attributes=False,
+        help='Thông tin hiển thị ở cột phải trang hội viên. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
     hero_content = fields.Html(
         'Nội dung đầu trang', sanitize_attributes=False,
         help='Chữ hiển thị trên ảnh bìa. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
@@ -51,11 +54,36 @@ class EautMember(models.Model):
             '<p class="eaut-hero-desc">%s</p>'
         ) % (escape(self.name or ''), escape(self.short_description or ''))
 
+    def _default_contact_content(self):
+        self.ensure_one()
+        rows = []
+        if self.industry_id:
+            rows.append(('fa-industry', escape(self.industry_id.name)))
+        if self.representative_name:
+            text = escape(self.representative_name)
+            if self.representative_position:
+                text = Markup('%s - %s') % (text, escape(self.representative_position))
+            rows.append(('fa-user', text))
+        if self.address:
+            rows.append(('fa-map-marker', escape(self.address)))
+        if self.phone:
+            rows.append(('fa-phone', escape(self.phone)))
+        if self.email:
+            rows.append(('fa-envelope', Markup('<a href="mailto:%s">%s</a>') % (
+                escape(self.email), escape(self.email))))
+        if self.website:
+            rows.append(('fa-globe', Markup('<a href="%s" target="_blank" rel="noopener">%s</a>') % (
+                escape(self.website), escape(self.website))))
+        return Markup('').join(
+            Markup('<p><i class="fa %s fa-fw"></i> %s</p>') % (icon, text) for icon, text in rows)
+
     @api.model_create_multi
     def create(self, vals_list):
         members = super().create(vals_list)
         for member in members.filtered(lambda m: not m.hero_content):
             member.hero_content = member._default_hero_content()
+        for member in members.filtered(lambda m: not m.contact_content):
+            member.contact_content = member._default_contact_content()
         return members
 
     def action_publish(self):

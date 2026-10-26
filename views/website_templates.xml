@@ -48,18 +48,14 @@
                                     <img t-if="m.logo" t-att-src="website.image_url(m, 'logo', '256x256')"
                                          t-att-alt="m.name" loading="lazy"/>
                                 </div>
-                                <h5 class="eaut-card-name">
-                                    <t t-out="m.name"/>
-                                </h5>
-                                <div class="eaut-badge" t-if="m.representative_name">
-                                    <t t-out="m.representative_name"/>
-                                    <t t-if="m.representative_position">/
-                                        <t t-out="m.representative_position"/>
-                                    </t>
-                                </div>
-                                <div class="eaut-card-industry text-muted" t-if="m.industry_id">
-                                    <t t-out="m.industry_id.name"/>
-                                </div>
+                                                                <div t-if="m.card_content" t-field="m.card_content" class="eaut-card-content"/>
+                                <t t-else="">
+                                    <h5 class="eaut-card-name"><t t-out="m.name"/></h5>
+                                    <div class="eaut-badge" t-if="m.representative_name">
+                                        <t t-out="m.representative_name"/><t t-if="m.representative_position"> / <t t-out="m.representative_position"/></t>
+                                    </div>
+                                    <div class="eaut-card-industry text-muted" t-if="m.industry_id"><t t-out="m.industry_id.name"/></div>
+                                </t>
                                 <a t-att-href="m.website_url" class="btn btn-primary mt-auto">XEM CHI TIẾT
                                     <i class="fa fa-angle-right ms-1"/>
                                 </a>

@@ -24,6 +24,9 @@ class EautMember(models.Model):
     hero_content = fields.Html(
         'Nội dung đầu trang', sanitize_attributes=False,
         help='Chữ hiển thị trên ảnh bìa. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
+    card_content = fields.Html(
+        'Nội dung thẻ danh sách', sanitize_attributes=False,
+        help='Tên, người đại diện và ngành nghề hiển thị trên thẻ ở trang danh sách. Chỉnh trực tiếp trên website.')
     representative_name = fields.Char('Người đại diện')
     representative_position = fields.Char('Chức danh')
     phone = fields.Char('Điện thoại')
@@ -54,6 +57,18 @@ class EautMember(models.Model):
             '<p class="eaut-hero-desc">%s</p>'
         ) % (escape(self.name or ''), escape(self.short_description or ''))
 
+    def _default_card_content(self):
+        self.ensure_one()
+        parts = [Markup('<h5 class="eaut-card-name">%s</h5>') % escape(self.name or '')]
+        if self.representative_name:
+            text = escape(self.representative_name)
+            if self.representative_position:
+                text = Markup('%s / %s') % (text, escape(self.representative_position))
+            parts.append(Markup('<div class="eaut-badge">%s</div>') % text)
+        if self.industry_id:
+            parts.append(Markup('<div class="eaut-card-industry text-muted">%s</div>') % escape(self.industry_id.name))
+        return Markup('').join(parts)
+
     def _default_contact_content(self):
         self.ensure_one()
         rows = []
@@ -82,6 +97,8 @@ class EautMember(models.Model):
         members = super().create(vals_list)
         for member in members.filtered(lambda m: not m.hero_content):
             member.hero_content = member._default_hero_content()
+        for member in members.filtered(lambda m: not m.card_content):
+            member.card_content = member._default_card_content()
         for member in members.filtered(lambda m: not m.contact_content):
             member.contact_content = member._default_contact_content()
         return members

@@ -1,6 +1,6 @@
 {
     'name': 'Hội viên (EAUT)',
-    'version': '19.0.1.0.3',
+     'version': '19.0.1.0.6',
     'category': 'Website',
     'summary': 'Quản lý hội viên và hiển thị hồ sơ hội viên (sản phẩm, dịch vụ, bài viết, thư viện ảnh) trên website',
     'depends': ['base', 'mail', 'website'],

@@ -1,26 +1,10 @@
-$eaut-red: #e11d2a;
-$eaut-red-dark: #b8131f;
-$eaut-text-muted: #8a8f98;
+$eaut-red: var(--bs-primary);
 
 .eaut-page {
     .eaut-title {
         color: $eaut-red;
         font-weight: 800;
         text-transform: uppercase;
-    }
-
-    .eaut-btn {
-        background: $eaut-red;
-        border: 0;
-        border-radius: 2px;
-        color: #fff;
-        font-weight: 700;
-        padding: .5rem 1.25rem;
-
-        &:hover {
-            background: $eaut-red-dark;
-            color: #fff;
-        }
     }
 
     .eaut-filter {
@@ -67,7 +51,7 @@ $eaut-text-muted: #8a8f98;
     }
 
     .eaut-badge {
-        background: #fdecee;
+    background: rgba(var(--bs-primary-rgb), .1);
         color: $eaut-red;
         font-size: .8rem;
         font-weight: 600;
@@ -82,12 +66,33 @@ $eaut-text-muted: #8a8f98;
 
     // Hero trang chi tiết
     .eaut-hero {
-        background: linear-gradient(135deg, #0e7490, $eaut-red) center/cover no-repeat;
+      background: linear-gradient(135deg, #0e7490, var(--bs-primary));
+        overflow: hidden;
         color: #fff;
     }
 
+        .eaut-hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Để click xuyên qua lớp phủ vào ảnh nền (đổi ảnh trong editor)
     .eaut-hero-overlay {
         background: rgba(0, 0, 0, .35);
+                pointer-events: none;
+
+        .container {
+            pointer-events: auto;
+        }
+    }
+
+    .eaut-side-logo img {
+        max-height: 140px;
+        max-width: 100%;
+        object-fit: contain;
     }
 
     .eaut-hero-label {
@@ -107,18 +112,7 @@ $eaut-text-muted: #8a8f98;
         opacity: .95;
     }
 
-    .eaut-rep-card {
-        background: #fff;
-        color: #212529;
-        border-radius: .5rem;
-        padding: 1rem;
 
-        img {
-            max-width: 72px;
-            max-height: 72px;
-            object-fit: contain;
-        }
-    }
 
     .eaut-tabs {
         background: #fff;

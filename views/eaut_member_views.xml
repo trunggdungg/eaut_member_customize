@@ -112,6 +112,7 @@
                             <field name="email"/>
                             <field name="website"/>
                             <field name="address"/>
+                            <field name="website_published" string="Xuất bản" widget="boolean_toggle"/>
                         </group>
                     </group>
                     <notebook>

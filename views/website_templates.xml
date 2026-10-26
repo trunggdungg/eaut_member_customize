@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Danh sách hội viên -->
+    <template id="members_page" name="Danh sách hội viên">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Danh sách hội viên</t>
+            <div id="wrap" class="eaut-page">
+                <div class="container py-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+                        <div>
+                            <h1 class="eaut-title mb-1">DANH SÁCH HỘI VIÊN</h1>
+                            <div class="text-muted"><t t-out="total"/> hội viên</div>
+                        </div>
+                        <form action="/hoi-vien" method="get" class="eaut-filter d-flex flex-wrap gap-2 align-items-center">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm hội viên..." t-att-value="search"/>
+                            <select name="industry" class="form-select" onchange="this.form.submit()">
+                                <option value="">Tất cả ngành</option>
+                                <t t-foreach="industries" t-as="ind">
+                                    <option t-att-value="ind.id" t-att-selected="ind.id == industry_id"><t t-out="ind.name"/></option>
+                                </t>
+                            </select>
+                            <label class="mb-0 ms-2">Sắp xếp</label>
+                            <select name="order" class="form-select" onchange="this.form.submit()">
+                                <t t-foreach="sorts.items()" t-as="s">
+                                    <option t-att-value="s[0]" t-att-selected="s[0] == order"><t t-out="s[1][0]"/></option>
+                                </t>
+                            </select>
+                            <button type="submit" class="btn eaut-btn">Tìm</button>
+                        </form>
+                    </div>
+
+                    <div class="row" t-if="members">
+                        <div class="col-12 col-sm-6 col-lg-3 mb-4" t-foreach="members" t-as="m">
+                            <div class="eaut-card h-100 text-center">
+                                <div class="eaut-card-logo">
+                                    <img t-if="m.logo" t-att-src="website.image_url(m, 'logo', '256x256')" t-att-alt="m.name" loading="lazy"/>
+                                </div>
+                                <h5 class="eaut-card-name"><t t-out="m.name"/></h5>
+                                <div class="eaut-badge" t-if="m.representative_name">
+                                    <t t-out="m.representative_name"/><t t-if="m.representative_position"> / <t t-out="m.representative_position"/></t>
+                                </div>
+                                <div class="eaut-card-industry text-muted" t-if="m.industry_id"><t t-out="m.industry_id.name"/></div>
+                                <a t-att-href="m.website_url" class="btn eaut-btn mt-auto">XEM CHI TIẾT <i class="fa fa-angle-right ms-1"/></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-else="" class="alert alert-info">Không tìm thấy hội viên phù hợp.</div>
+
+                    <div class="d-flex justify-content-center"><t t-call="website.pager"/></div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Thanh tiêu đề + tab của trang hội viên -->
+    <template id="member_header" name="Đầu trang hội viên">
+        <div class="eaut-hero" t-attf-style="#{'background-image: url(%s);' % website.image_url(member, 'banner') if member.banner else ''}">
+            <div class="eaut-hero-overlay">
+                <div class="container py-5">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <div class="eaut-hero-label">HỘI VIÊN</div>
+                            <h1 class="eaut-hero-title"><t t-out="member.name"/></h1>
+                            <p class="eaut-hero-desc" t-if="member.short_description"><t t-out="member.short_description"/></p>
+                        </div>
+                        <div class="col-lg-4" t-if="member.representative_name or member.logo">
+                            <div class="eaut-rep-card d-flex align-items-center gap-3">
+                                <img t-if="member.logo" t-att-src="website.image_url(member, 'logo', '128x128')" t-att-alt="member.name"/>
+                                <div>
+                                    <div class="fw-bold"><t t-out="member.representative_name"/></div>
+                                    <div class="small text-muted" t-if="member.representative_position"><t t-out="member.representative_position"/></div>
+                                    <div class="small" t-if="member.industry_id"><t t-out="member.industry_id.name"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="eaut-tabs">
+            <div class="container d-flex flex-wrap gap-2 py-2">
+                <t t-foreach="tabs" t-as="t">
+                    <a t-att-href="member.website_url if t[0] == 'tong-quan' else '%s/%s' % (member.website_url, t[0])"
+                       t-attf-class="eaut-tab #{'active' if t[0] == tab else ''}"><t t-out="t[1]"/></a>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <!-- Chi tiết hội viên -->
+    <template id="member_detail_page" name="Chi tiết hội viên">
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="member.name"/>
+            <div id="wrap" class="eaut-page">
+                <t t-call="eaut_member_customize.member_header"/>
+                <div class="container py-4">
+                    <a href="/hoi-vien" class="small text-muted"><i class="fa fa-angle-left"/> Danh sách hội viên</a>
+
+                    <!-- Tổng quan -->
+                    <div t-if="tab == 'tong-quan'" class="row mt-3">
+                        <div class="col-lg-8">
+                            <h2 class="eaut-title">GIỚI THIỆU</h2>
+                            <div t-field="member.description" class="o_eaut_description"/>
+                        </div>
+                        <div class="col-lg-4">
+                            <t t-call="eaut_member_customize.member_contact_info"/>
+                        </div>
+                    </div>
+
+                    <!-- Sản phẩm -->
+                    <div t-elif="tab == 'san-pham'" class="mt-3">
+                        <h2 class="eaut-title">SẢN PHẨM</h2>
+                        <form t-attf-action="#{member.website_url}/san-pham" method="get" class="eaut-searchbox d-flex gap-2 mb-4">
+                            <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm..." t-att-value="q"/>
+                            <button type="submit" class="btn eaut-btn">Tìm</button>
+                        </form>
+                        <div class="row" t-if="products">
+                            <div class="col-12 col-sm-6 col-lg-4 mb-4" t-foreach="products" t-as="p">
+                                <div class="eaut-item h-100">
+                                    <div class="eaut-item-img"><img t-if="p.image" t-att-src="website.image_url(p, 'image', '512x512')" t-att-alt="p.name" loading="lazy"/></div>
+                                    <div class="p-3">
+                                        <h5><t t-out="p.name"/></h5>
+                                        <p class="text-muted mb-0" t-if="p.description"><t t-out="p.description"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-else="" class="alert alert-info">Chưa có sản phẩm nào.</div>
+                    </div>
+
+                    <!-- Dịch vụ -->
+                    <div t-elif="tab == 'dich-vu'" class="mt-3">
+                        <h2 class="eaut-title">DỊCH VỤ</h2>
+                        <div class="row" t-if="services">
+                            <div class="col-12 col-sm-6 col-lg-4 mb-4" t-foreach="services" t-as="s">
+                                <div class="eaut-item h-100">
+                                    <div class="eaut-item-img" t-if="s.image"><img t-att-src="website.image_url(s, 'image', '512x512')" t-att-alt="s.name" loading="lazy"/></div>
+                                    <div class="p-3">
+                                        <h5><t t-out="s.name"/></h5>
+                                        <p class="text-muted mb-0" t-if="s.description"><t t-out="s.description"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-else="" class="alert alert-info">Chưa có dịch vụ nào.</div>
+                    </div>
+
+                    <!-- Bài viết -->
+                    <div t-elif="tab == 'bai-viet'" class="mt-3">
+                        <h2 class="eaut-title">BÀI VIẾT</h2>
+                        <div class="row" t-if="posts">
+                            <div class="col-12 col-md-6 col-lg-4 mb-4" t-foreach="posts" t-as="post">
+                                <a t-att-href="post.website_url" class="eaut-item d-block h-100 text-decoration-none text-reset">
+                                    <div class="eaut-item-img" t-if="post.cover"><img t-att-src="website.image_url(post, 'cover', '512x512')" t-att-alt="post.title" loading="lazy"/></div>
+                                    <div class="p-3">
+                                        <div class="small text-muted" t-if="post.publish_date"><t t-out="post.publish_date" t-options="{'widget': 'date'}"/></div>
+                                        <h5><t t-out="post.title"/></h5>
+                                        <p class="text-muted mb-0" t-if="post.summary"><t t-out="post.summary"/></p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div t-else="" class="alert alert-info">Chưa có bài viết nào.</div>
+                    </div>
+
+                    <!-- Thư viện ảnh -->
+                    <div t-elif="tab == 'thu-vien'" class="mt-3">
+                        <h2 class="eaut-title">THƯ VIỆN ẢNH</h2>
+                        <div class="row" t-if="gallery">
+                            <div class="col-6 col-md-4 col-lg-3 mb-4" t-foreach="gallery" t-as="g">
+                                <figure class="eaut-gallery-item mb-0">
+                                    <a t-att-href="website.image_url(g, 'image')" target="_blank">
+                                        <img t-att-src="website.image_url(g, 'image', '512x512')" t-att-alt="g.name or member.name" loading="lazy"/>
+                                    </a>
+                                    <figcaption class="small text-muted mt-1" t-if="g.name"><t t-out="g.name"/></figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <div t-else="" class="alert alert-info">Chưa có hình ảnh nào.</div>
+                    </div>
+
+                    <!-- Liên hệ -->
+                    <div t-elif="tab == 'lien-he'" class="row mt-3">
+                        <div class="col-lg-5 mb-4">
+                            <h2 class="eaut-title">LIÊN HỆ</h2>
+                            <t t-call="eaut_member_customize.member_contact_info"/>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="alert alert-success" t-if="sent">Cảm ơn bạn! Yêu cầu liên hệ đã được gửi.</div>
+                            <form t-attf-action="#{member.website_url}/lien-he/gui" method="post" class="eaut-contact-form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="mb-3"><label class="form-label">Họ và tên *</label><input type="text" name="name" class="form-control" required="required"/></div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control"/></div>
+                                    <div class="col-md-6 mb-3"><label class="form-label">Điện thoại</label><input type="text" name="phone" class="form-control"/></div>
+                                </div>
+                                <div class="mb-3"><label class="form-label">Nội dung</label><textarea name="message" rows="5" class="form-control"/></div>
+                                <button type="submit" class="btn eaut-btn">GỬI LIÊN HỆ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Khối thông tin liên hệ -->
+    <template id="member_contact_info" name="Thông tin liên hệ hội viên">
+        <div class="eaut-info">
+            <div t-if="member.representative_name" class="mb-2"><i class="fa fa-user fa-fw"/> <t t-out="member.representative_name"/><t t-if="member.representative_position"> - <t t-out="member.representative_position"/></t></div>
+            <div t-if="member.address" class="mb-2"><i class="fa fa-map-marker fa-fw"/> <t t-out="member.address"/></div>
+            <div t-if="member.phone" class="mb-2"><i class="fa fa-phone fa-fw"/> <t t-out="member.phone"/></div>
+            <div t-if="member.email" class="mb-2"><i class="fa fa-envelope fa-fw"/> <a t-att-href="'mailto:%s' % member.email"><t t-out="member.email"/></a></div>
+            <div t-if="member.website" class="mb-2"><i class="fa fa-globe fa-fw"/> <a t-att-href="member.website" target="_blank" rel="noopener"><t t-out="member.website"/></a></div>
+        </div>
+    </template>
+
+    <!-- Chi tiết bài viết -->
+    <template id="member_post_page" name="Bài viết hội viên">
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="post.title"/>
+            <div id="wrap" class="eaut-page">
+                <t t-call="eaut_member_customize.member_header"/>
+                <div class="container py-4">
+                    <a t-attf-href="#{member.website_url}/bai-viet" class="small text-muted"><i class="fa fa-angle-left"/> Tất cả bài viết</a>
+                    <article class="mt-3">
+                        <h1 class="eaut-title"><t t-out="post.title"/></h1>
+                        <div class="small text-muted mb-3" t-if="post.publish_date"><t t-out="post.publish_date" t-options="{'widget': 'date'}"/></div>
+                        <img t-if="post.cover" t-att-src="website.image_url(post, 'cover', '1024x1024')" class="img-fluid mb-3" t-att-alt="post.title"/>
+                        <div t-field="post.content"/>
+                    </article>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

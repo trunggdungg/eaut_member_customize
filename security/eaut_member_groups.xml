@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_eaut_member_manager" model="res.groups">
+        <field name="name">Hội viên: Quản trị</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_eaut_member_manager'))]"/>
+    </record>
+</odoo>

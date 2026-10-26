@@ -1,0 +1,27 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eaut_member_manager,eaut.member manager,model_eaut_member,group_eaut_member_manager,1,1,1,1
+access_eaut_member_user,eaut.member user,model_eaut_member,base.group_user,1,0,0,0
+access_eaut_member_designer,eaut.member designer,model_eaut_member,website.group_website_designer,1,1,0,0
+access_eaut_member_public,eaut.member public,model_eaut_member,base.group_public,1,0,0,0
+access_eaut_member_portal,eaut.member portal,model_eaut_member,base.group_portal,1,0,0,0
+access_eaut_member_industry_manager,eaut.member.industry manager,model_eaut_member_industry,group_eaut_member_manager,1,1,1,1
+access_eaut_member_industry_user,eaut.member.industry user,model_eaut_member_industry,base.group_user,1,0,0,0
+access_eaut_member_industry_public,eaut.member.industry public,model_eaut_member_industry,base.group_public,1,0,0,0
+access_eaut_member_industry_portal,eaut.member.industry portal,model_eaut_member_industry,base.group_portal,1,0,0,0
+access_eaut_member_product_manager,eaut.member.product manager,model_eaut_member_product,group_eaut_member_manager,1,1,1,1
+access_eaut_member_product_user,eaut.member.product user,model_eaut_member_product,base.group_user,1,0,0,0
+access_eaut_member_product_public,eaut.member.product public,model_eaut_member_product,base.group_public,1,0,0,0
+access_eaut_member_product_portal,eaut.member.product portal,model_eaut_member_product,base.group_portal,1,0,0,0
+access_eaut_member_service_manager,eaut.member.service manager,model_eaut_member_service,group_eaut_member_manager,1,1,1,1
+access_eaut_member_service_user,eaut.member.service user,model_eaut_member_service,base.group_user,1,0,0,0
+access_eaut_member_service_public,eaut.member.service public,model_eaut_member_service,base.group_public,1,0,0,0
+access_eaut_member_service_portal,eaut.member.service portal,model_eaut_member_service,base.group_portal,1,0,0,0
+access_eaut_member_gallery_manager,eaut.member.gallery manager,model_eaut_member_gallery,group_eaut_member_manager,1,1,1,1
+access_eaut_member_gallery_user,eaut.member.gallery user,model_eaut_member_gallery,base.group_user,1,0,0,0
+access_eaut_member_gallery_public,eaut.member.gallery public,model_eaut_member_gallery,base.group_public,1,0,0,0
+access_eaut_member_gallery_portal,eaut.member.gallery portal,model_eaut_member_gallery,base.group_portal,1,0,0,0
+access_eaut_member_post_manager,eaut.member.post manager,model_eaut_member_post,group_eaut_member_manager,1,1,1,1
+access_eaut_member_post_user,eaut.member.post user,model_eaut_member_post,base.group_user,1,0,0,0
+access_eaut_member_post_public,eaut.member.post public,model_eaut_member_post,base.group_public,1,0,0,0
+access_eaut_member_post_portal,eaut.member.post portal,model_eaut_member_post,base.group_portal,1,0,0,0
+access_eaut_member_contact_request_manager,eaut.member.contact.request manager,model_eaut_member_contact_request,group_eaut_member_manager,1,1,1,1

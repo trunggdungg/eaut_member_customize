@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="industry_electric" model="eaut.member.industry">
+        <field name="name">Điện - Điện tử</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="industry_textile" model="eaut.member.industry">
+        <field name="name">Dệt may - Da giày</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="industry_agri_food" model="eaut.member.industry">
+        <field name="name">Nông sản - Thực phẩm</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="industry_mechanical" model="eaut.member.industry">
+        <field name="name">Cơ khí chế tạo</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="industry_it" model="eaut.member.industry">
+        <field name="name">CNTT - Kinh tế số</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="menu_website_hoi_vien" model="website.menu">
+        <field name="name">Hội viên</field>
+        <field name="url">/hoi-vien</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">60</field>
+    </record>
+</odoo>

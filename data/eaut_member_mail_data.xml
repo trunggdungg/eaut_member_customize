@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_founding_anniversary" model="mail.template">
+        <field name="name">Hội viên: Chúc mừng kỷ niệm ngày thành lập</field>
+        <field name="model_id" ref="model_eaut_member"/>
+        <field name="subject">Chúc mừng kỷ niệm {{ object.get_anniversary_years() }} năm thành lập {{ object.name }}</field>
+        <field name="email_from">{{ user.company_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_to">{{ object.email or object.partner_id.email }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 14px;">
+    <p>Kính gửi Quý công ty <strong><t t-out="object.name"/></strong>,</p>
+    <p>
+        Nhân dịp kỷ niệm <strong><t t-out="object.get_anniversary_years()"/> năm</strong> ngày thành lập
+        (<t t-out="object.founding_date" t-options="{'widget': 'date'}"/>),
+        thay mặt ban lãnh đạo, xin gửi lời chúc mừng tốt đẹp nhất đến Quý công ty.
+    </p>
+    <p>Kính chúc Quý công ty ngày càng phát triển bền vững và gặt hái nhiều thành công mới.</p>
+    <p>Trân trọng,<br/><t t-out="user.company_id.name"/></p>
+</div>
+        </field>
+    </record>
+
+    <record id="ir_cron_eaut_member_anniversary" model="ir.cron">
+        <field name="name">Hội viên: Gửi email chúc mừng kỷ niệm thành lập</field>
+        <field name="model_id" ref="model_eaut_member"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_anniversary_emails()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

@@ -87,6 +87,11 @@
         <field name="model">eaut.member</field>
         <field name="arch" type="xml">
             <form>
+               <header>
+                    <button name="action_send_anniversary_email" type="object"
+                            string="Gửi email chúc mừng" invisible="not founding_date"
+                            groups="eaut_member_customize.group_eaut_member_manager"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
@@ -105,6 +110,7 @@
                             <field name="representative_name"/>
                             <field name="representative_position"/>
                             <field name="join_date"/>
+                              <field name="founding_date"/>
                             <field name="partner_id"/>
                         </group>
                         <group string="Liên hệ">
@@ -133,6 +139,15 @@
                                     <field name="name"/>
                                 </list>
                             </field>
+                                                        <div class="d-flex align-items-center gap-3 mb-2">
+                                <button name="action_rebuild_stats_content" type="object" class="btn btn-secondary"
+                                        string="Tạo lại khối số liệu từ danh sách"
+                                        confirm="Khối số liệu trên website sẽ được tạo lại và mất các chỉnh sửa định dạng. Tiếp tục?"/>
+                                <span class="text-muted">
+                                    Danh sách trên dùng để nhập dữ liệu. Font, cỡ chữ, màu của giá trị và nhãn chỉnh trực tiếp trên website.
+                                </span>
+                            </div>
+                            <field name="stats_content" invisible="1"/>
                             <separator string="Chứng nhận / Giải thưởng"/>
                             <field name="award_ids">
                                 <list editable="bottom">

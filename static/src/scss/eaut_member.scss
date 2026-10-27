@@ -64,6 +64,16 @@ $eaut-red: $primary;
         align-items: center;
         justify-content: center;
         font-size: 1.25rem;
+                border-radius: 50%;
+        background: rgba($primary, .1);
+        color: $primary;
+    }
+
+    .eaut-stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: $primary;
     }
 
     .eaut-award-img {
@@ -138,6 +148,26 @@ $eaut-red: $primary;
         border-bottom: 1px solid #e5e7eb;
     }
 
+        // Ảnh đại diện bài viết: khung cố định, ảnh to nhỏ đều được cắt vừa khung
+    .eaut-post-cover {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        max-height: 480px;
+        overflow: hidden;
+        border-radius: .5rem;
+        background: #f3f4f6;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .eaut-post-content img {
+        max-width: 100%;
+        height: auto;
+    }
 
     // Sản phẩm / dịch vụ / bài viết
     .eaut-item {

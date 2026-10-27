@@ -115,19 +115,7 @@
                         <div class="col-lg-8">
                            <div class="oe_structure" id="oe_structure_eaut_intro"><section class="s_text_block pt0 pb8"><h2 class="eaut-title">GIỚI THIỆU</h2></section></div>
                             <div t-field="member.description" class="o_eaut_description"/>
-                                                        <div t-if="member.stat_ids" class="row g-3 mt-3 pt-3 border-top eaut-stats">
-                                <div class="col-12 col-sm-6" t-foreach="member.stat_ids" t-as="stat">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span class="eaut-stat-icon rounded-circle bg-primary bg-opacity-10 text-primary">
-                                            <i t-attf-class="fa #{stat.icon or 'fa-star'}"/>
-                                        </span>
-                                        <div>
-                                            <div class="h3 mb-0 fw-bold text-primary"><t t-out="stat.value"/></div>
-                                            <div><t t-out="stat.name"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                               <div t-if="member.stats_content" t-field="member.stats_content" class="eaut-stats-content mt-3 pt-3 border-top"/>
                         </div>
                         <div class="col-lg-4">
                             <div class="eaut-side-logo mb-3" t-if="member.logo">
@@ -358,9 +346,10 @@
                         <div class="small text-muted mb-3" t-if="post.publish_date">
                             <t t-out="post.publish_date" t-options="{'widget': 'date'}"/>
                         </div>
-                        <img t-if="post.cover" t-att-src="website.image_url(post, 'cover', '1024x1024')"
-                             class="img-fluid mb-3" t-att-alt="post.title"/>
-                        <div t-field="post.content"/>
+                          <div class="eaut-post-cover mb-3" t-if="post.cover">
+                            <img t-att-src="website.image_url(post, 'cover', '1024x1024')" t-att-alt="post.title"/>
+                        </div>
+                        <div t-field="post.content" class="eaut-post-content"/>
                     </article>
                 </div>
             </div>

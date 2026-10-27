@@ -10,6 +10,7 @@
         'security/eaut_member_rules.xml',
         'data/eaut_member_data.xml',
         'views/eaut_member_views.xml',
+        'data/eaut_member_mail_data.xml',
         'views/eaut_member_menus.xml',
         'views/website_templates.xml',
         'data/eaut_member_fill.xml',

@@ -123,6 +123,27 @@
                             </group>
                             <field name="description"/>
                         </page>
+                        <page string="Số liệu &amp; Chứng nhận" name="achievements">
+                            <separator string="Số liệu nổi bật"/>
+                            <field name="stat_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="icon"/>
+                                    <field name="value"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                            <separator string="Chứng nhận / Giải thưởng"/>
+                            <field name="award_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="image" widget="image" options="{'size': [0, 48]}"/>
+                                    <field name="award_type"/>
+                                    <field name="name"/>
+                                    <field name="year"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Sản phẩm" name="products">
                             <field name="product_ids">
                                 <list editable="bottom">

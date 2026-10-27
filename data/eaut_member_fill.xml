@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Điền sẵn nội dung chỉnh sửa được trên website cho hội viên cũ -->
+    <function model="eaut.member" name="_fill_default_contents"/>
+</odoo>

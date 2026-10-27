@@ -25,3 +25,11 @@ access_eaut_member_post_user,eaut.member.post user,model_eaut_member_post,base.g
 access_eaut_member_post_public,eaut.member.post public,model_eaut_member_post,base.group_public,1,0,0,0
 access_eaut_member_post_portal,eaut.member.post portal,model_eaut_member_post,base.group_portal,1,0,0,0
 access_eaut_member_contact_request_manager,eaut.member.contact.request manager,model_eaut_member_contact_request,group_eaut_member_manager,1,1,1,1
+access_eaut_member_stat_manager,eaut.member.stat manager,model_eaut_member_stat,group_eaut_member_manager,1,1,1,1
+access_eaut_member_stat_user,eaut.member.stat user,model_eaut_member_stat,base.group_user,1,0,0,0
+access_eaut_member_stat_public,eaut.member.stat public,model_eaut_member_stat,base.group_public,1,0,0,0
+access_eaut_member_stat_portal,eaut.member.stat portal,model_eaut_member_stat,base.group_portal,1,0,0,0
+access_eaut_member_award_manager,eaut.member.award manager,model_eaut_member_award,group_eaut_member_manager,1,1,1,1
+access_eaut_member_award_user,eaut.member.award user,model_eaut_member_award,base.group_user,1,0,0,0
+access_eaut_member_award_public,eaut.member.award public,model_eaut_member_award,base.group_public,1,0,0,0
+access_eaut_member_award_portal,eaut.member.award portal,model_eaut_member_award,base.group_portal,1,0,0,0

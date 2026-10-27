@@ -115,6 +115,19 @@
                         <div class="col-lg-8">
                            <div class="oe_structure" id="oe_structure_eaut_intro"><section class="s_text_block pt0 pb8"><h2 class="eaut-title">GIỚI THIỆU</h2></section></div>
                             <div t-field="member.description" class="o_eaut_description"/>
+                                                        <div t-if="member.stat_ids" class="row g-3 mt-3 pt-3 border-top eaut-stats">
+                                <div class="col-12 col-sm-6" t-foreach="member.stat_ids" t-as="stat">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="eaut-stat-icon rounded-circle bg-primary bg-opacity-10 text-primary">
+                                            <i t-attf-class="fa #{stat.icon or 'fa-star'}"/>
+                                        </span>
+                                        <div>
+                                            <div class="h3 mb-0 fw-bold text-primary"><t t-out="stat.value"/></div>
+                                            <div><t t-out="stat.name"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="eaut-side-logo mb-3" t-if="member.logo">
@@ -258,6 +271,28 @@
                             </form>
                         </div>
                     </div>
+
+                      <!-- Chứng nhận / giải thưởng -->
+                    <section t-if="tab == 'tong-quan' and member.award_ids" class="mt-5 eaut-awards">
+                        <div class="oe_structure" id="oe_structure_eaut_member_title_awards">
+                            <h2 class="text-center">CHỨNG NHẬN / GIẢI THƯỞNG</h2>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 col-sm-6 col-lg-4 text-center mb-3" t-foreach="member.award_ids" t-as="award">
+                                        <div class="eaut-award-img mb-2">
+                                            <img t-if="award.image" t-att-src="website.image_url(award, 'image', '256x256')" t-att-alt="award.name" loading="lazy"/>
+                                            <i t-else="" class="fa fa-certificate fa-4x text-warning"/>
+                                        </div>
+                                        <div class="fw-semibold" t-if="award.award_type"><t t-out="award.award_type"/></div>
+                                        <div class="fw-semibold text-primary"><t t-out="award.name"/></div>
+                                        <div class="small text-muted" t-if="award.year"><t t-out="award.year"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </t>

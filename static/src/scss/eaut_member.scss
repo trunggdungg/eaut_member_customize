@@ -55,6 +55,30 @@ $eaut-red: $primary;
         margin-bottom: .75rem;
     }
 
+
+    .eaut-stat-icon {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .eaut-award-img {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            max-height: 80px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+    }
+
     .eaut-badge {
           display: inline-block;
        background: rgba($primary, .1);

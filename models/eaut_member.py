@@ -126,21 +126,6 @@ class EautMember(models.Model):
         for member in self:
             member.stats_content = member._default_stats_content()
 
-    @api.model
-    def _fill_default_contents(self):
-        """Điền nội dung mặc định cho hội viên chưa có (chạy mỗi lần cài/nâng cấp module)."""
-        for member in self.with_context(active_test=False).search([]):
-            vals = {}
-            if not member.hero_content:
-                vals['hero_content'] = member._default_hero_content()
-            if not member.card_content:
-                vals['card_content'] = member._default_card_content()
-            if not member.contact_content:
-                vals['contact_content'] = member._default_contact_content()
-            if not member.stats_content and member.stat_ids:
-                vals['stats_content'] = member._default_stats_content()
-            if vals:
-                member.write(vals)
 
 
     @api.model_create_multi

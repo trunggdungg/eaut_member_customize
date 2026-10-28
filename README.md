@@ -1,4 +1,4 @@
-# eaut_member_customize – Quản lý hội viên (Odoo 19 Community)
+# eaut_member_customize – Quản lý hội viên 
 
 Module dùng chung để quản lý hội viên/doanh nghiệp thành viên và hiển thị hồ sơ lên website
 (sản phẩm, dịch vụ, bài viết, thư viện ảnh, liên hệ). Có thể tái sử dụng cho nhiều dự án.

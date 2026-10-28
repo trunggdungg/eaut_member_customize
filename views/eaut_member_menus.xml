@@ -4,8 +4,11 @@
               groups="group_eaut_member_manager"/>
     <menuitem id="menu_eaut_member_list" name="Hội viên" parent="menu_eaut_member_root"
               action="action_eaut_member" sequence="10"/>
-    <menuitem id="menu_eaut_member_contact_request" name="Yêu cầu liên hệ" parent="menu_eaut_member_root"
-              action="action_eaut_member_contact_request" sequence="20"/>
+    <menuitem id="menu_eaut_contact" name="Yêu cầu liên hệ" parent="menu_eaut_member_root"
+              action="action_eaut_contact" sequence="20"/>
+    <menuitem id="menu_eaut_member_contact_request" name="Yêu cầu liên hệ từ đối tác" parent="menu_eaut_member_root"
+              action="action_eaut_member_contact_request" sequence="25"/>
+
     <menuitem id="menu_eaut_member_config" name="Cấu hình" parent="menu_eaut_member_root" sequence="90"/>
     <menuitem id="menu_eaut_member_industry" name="Ngành nghề" parent="menu_eaut_member_config"
               action="action_eaut_member_industry" sequence="10"/>

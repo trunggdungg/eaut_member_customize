@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eaut_contact_list" model="ir.ui.view">
+        <field name="name">eaut.contact.list</field>
+        <field name="model">eaut.contact</field>
+        <field name="arch" type="xml">
+            <list decoration-bf="state == 'new'" decoration-muted="state == 'done'">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="subject"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'" decoration-warning="state == 'processing'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eaut_contact_form" model="ir.ui.view">
+        <field name="name">eaut.contact.form</field>
+        <field name="model">eaut.contact</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_processing" type="object" string="Bắt đầu xử lý"
+                            class="btn-primary" invisible="state != 'new'"/>
+                    <button name="action_done" type="object" string="Hoàn tất"
+                            class="btn-primary" invisible="state != 'processing'"/>
+                    <button name="action_reopen" type="object" string="Mở lại" invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,processing,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="subject"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="message" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eaut_contact_search" model="ir.ui.view">
+        <field name="name">eaut.contact.search</field>
+        <field name="model">eaut.contact</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Liên hệ"
+                       filter_domain="['|', '|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('phone', 'ilike', self), ('subject', 'ilike', self)]"/>
+                <filter name="new" string="Mới" domain="[('state', '=', 'new')]"/>
+                <filter name="processing" string="Đang xử lý" domain="[('state', '=', 'processing')]"/>
+                <filter name="done" string="Đã xử lý" domain="[('state', '=', 'done')]"/>
+                <group>
+                    <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                    <filter name="group_date" string="Ngày gửi" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eaut_contact" model="ir.actions.act_window">
+        <field name="name">Liên hệ</field>
+        <field name="res_model">eaut.contact</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eaut_contact_search"/>
+        <field name="context">{'search_default_new': 1}</field>
+    </record>
+</odoo>

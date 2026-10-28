@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cho phép chọn model này làm "Tác vụ" của form trong website builder -->
+    <record id="model_eaut_contact" model="ir.model">
+        <field name="website_form_key">eaut_contact</field>
+        <field name="website_form_default_field_id" ref="field_eaut_contact__message"/>
+        <field name="website_form_access">True</field>
+        <field name="website_form_label">Gửi liên hệ về app Hội viên</field>
+    </record>
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>eaut.contact</value>
+        <value eval="['name', 'email', 'phone', 'subject', 'message']"/>
+    </function>
+</odoo>

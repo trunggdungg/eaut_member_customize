@@ -33,3 +33,6 @@ access_eaut_member_award_manager,eaut.member.award manager,model_eaut_member_awa
 access_eaut_member_award_user,eaut.member.award user,model_eaut_member_award,base.group_user,1,0,0,0
 access_eaut_member_award_public,eaut.member.award public,model_eaut_member_award,base.group_public,1,0,0,0
 access_eaut_member_award_portal,eaut.member.award portal,model_eaut_member_award,base.group_portal,1,0,0,0
+access_eaut_member_award_portal,eaut.member.award portal,model_eaut_member_award,base.group_portal,1,0,0,0
+access_eaut_contact_manager,eaut.contact manager,model_eaut_contact,group_eaut_member_manager,1,1,1,1
+access_eaut_contact_user,eaut.contact user,model_eaut_contact,base.group_user,1,0,0,0

@@ -88,11 +88,23 @@
         <field name="arch" type="xml">
             <form>
                <header>
+                     <button name="action_rebuild_contents" type="object" string="Đồng bộ thông tin"
+                            confirm="Nội dung đầu trang, thẻ danh sách, khối liên hệ và số liệu sẽ được tạo lại từ thông tin hiện tại và mất các chỉnh sửa định dạng trên website. Tiếp tục?"
+                            groups="eaut_member_customize.group_eaut_member_manager"/>
                     <button name="action_send_anniversary_email" type="object"
                             string="Gửi email chúc mừng" invisible="not founding_date"
                             groups="eaut_member_customize.group_eaut_member_manager"/>
                 </header>
                 <sheet>
+                            <field name="hero_customized" invisible="1"/>
+                    <field name="card_customized" invisible="1"/>
+                    <field name="contact_customized" invisible="1"/>
+                    <field name="stats_customized" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not (hero_customized or card_customized or contact_customized or stats_customized)">
+                        Một số khối nội dung trên website đã được chỉnh tay nên không tự đồng bộ theo thông tin bên dưới.
+                        Bấm <strong>Tạo lại nội dung từ thông tin</strong> để đồng bộ lại.
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
                         <field name="website_published" widget="website_redirect_button"/>
@@ -229,6 +241,14 @@
             </form>
         </field>
     </record>
+    <!-- Chạy hàng loạt từ menu Hành động của danh sách/biểu mẫu hội viên -->
+<!--    <record id="action_server_eaut_member_rebuild_contents" model="ir.actions.server">-->
+<!--        <field name="name">Tạo lại nội dung từ thông tin</field>-->
+<!--        <field name="model_id" ref="model_eaut_member"/>-->
+<!--        <field name="binding_model_id" ref="model_eaut_member"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">records.action_rebuild_contents()</field>-->
+<!--    </record>-->
 
     <record id="action_eaut_member" model="ir.actions.act_window">
         <field name="name">Hội viên</field>

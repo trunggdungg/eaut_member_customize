@@ -14,3 +14,10 @@ class EautMemberIndustry(models.Model):
         for industry in self:
             industry.member_count = self.env['eaut.member'].search_count(
                 [('industry_id', '=', industry.id)])
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'name' in vals:
+            # tên ngành nằm trong thẻ/khối liên hệ của hội viên, đổi tên thì đồng bộ lại
+            self.env['eaut.member'].search([('industry_id', 'in', self.ids)])._refresh_default_contents()
+        return res

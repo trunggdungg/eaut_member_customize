@@ -54,6 +54,10 @@ class EautMember(models.Model):
 
     stat_ids = fields.One2many('eaut.member.stat', 'member_id', 'Số liệu nổi bật')
     award_ids = fields.One2many('eaut.member.award', 'member_id', 'Chứng nhận / Giải thưởng')
+    hero_customized = fields.Boolean('Đã chỉnh nội dung đầu trang trên website', copy=False)
+    card_customized = fields.Boolean('Đã chỉnh nội dung thẻ trên website', copy=False)
+    contact_customized = fields.Boolean('Đã chỉnh khối liên hệ trên website', copy=False)
+    stats_customized = fields.Boolean('Đã chỉnh khối số liệu trên website', copy=False)
     stats_content = fields.Html(
         'Khối số liệu nổi bật', sanitize_attributes=False,
         help='Giá trị và nhãn số liệu hiển thị ở tab Tổng quan. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
@@ -121,23 +125,81 @@ class EautMember(models.Model):
             for stat in self.stat_ids)
         return Markup('<div class="row g-3 eaut-stats">%s</div>') % items
 
+        # Khối Html (hero/card/contact/stats) được sinh từ thông tin của hội viên. Khối nào chưa bị
+        # chỉnh tay trên website thì tự sinh lại khi thông tin gốc đổi; khối đã chỉnh thì được giữ nguyên.
+
+    _CONTENT_FLAGS = {
+        'hero_content': 'hero_customized',
+        'card_content': 'card_customized',
+        'contact_content': 'contact_customized',
+        'stats_content': 'stats_customized',
+    }
+    _CONTENT_SOURCE_FIELDS = {
+        'name', 'short_description', 'representative_name', 'representative_position',
+        'industry_id', 'phone', 'email', 'website', 'address',
+    }
+
+    def _refresh_default_contents(self, force=False):
+        """Sinh lại các khối nội dung mặc định.
+
+        Khối đã được chỉnh trên website được giữ nguyên, trừ khi force=True
+        (khi đó sinh lại tất cả và bỏ đánh dấu đã chỉnh).
+        """
+        for member in self.with_context(eaut_auto_content=True):
+            vals = {}
+            if force or not member.hero_customized:
+                vals['hero_content'] = member._default_hero_content()
+            if force or not member.card_customized:
+                vals['card_content'] = member._default_card_content()
+            if force or not member.contact_customized:
+                vals['contact_content'] = member._default_contact_content()
+            if force or not member.stats_customized:
+                vals['stats_content'] = member._default_stats_content()
+            if force:
+                vals.update({flag: False for flag in self._CONTENT_FLAGS.values()})
+            if vals:
+                member.write(vals)
+
+    def _refresh_stats_content(self):
+        for member in self.with_context(eaut_auto_content=True):
+            if not member.stats_customized:
+                member.write({'stats_content': member._default_stats_content()})
+
+    def action_rebuild_contents(self):
+        """Tạo lại toàn bộ nội dung từ thông tin hội viên (mất các chỉnh sửa định dạng trên website)."""
+        self._refresh_default_contents(force=True)
+
     def action_rebuild_stats_content(self):
         """Tạo lại khối số liệu từ danh sách (mất các chỉnh sửa định dạng trên website)."""
-        for member in self:
-            member.stats_content = member._default_stats_content()
-
+        for member in self.with_context(eaut_auto_content=True):
+            member.write({
+                'stats_content': member._default_stats_content(),
+                'stats_customized': False,
+            })
 
 
     @api.model_create_multi
     def create(self, vals_list):
         members = super().create(vals_list)
-        for member in members.filtered(lambda m: not m.hero_content):
-            member.hero_content = member._default_hero_content()
-        for member in members.filtered(lambda m: not m.card_content):
-            member.card_content = member._default_card_content()
-        for member in members.filtered(lambda m: not m.contact_content):
-            member.contact_content = member._default_contact_content()
+        for member, vals in zip(members, vals_list):
+            # nội dung được truyền sẵn khi tạo (ví dụ import) coi như đã chỉnh tay
+            flags = {flag: True for field, flag in self._CONTENT_FLAGS.items() if vals.get(field)}
+            if flags:
+                member.with_context(eaut_auto_content=True).write(flags)
+        members._refresh_default_contents()
         return members
+
+    def write(self, vals):
+        if self.env.context.get('eaut_auto_content'):
+            return super().write(vals)
+        vals = dict(vals)
+        for field, flag in self._CONTENT_FLAGS.items():
+            if field in vals:
+                vals.setdefault(flag, True)  # ghi trực tiếp (ví dụ từ website builder) = đã chỉnh tay
+        res = super().write(vals)
+        if self._CONTENT_SOURCE_FIELDS & vals.keys():
+            self._refresh_default_contents()
+        return res
 
     def get_anniversary_years(self):
         """Số năm thành lập tính đến năm hiện tại (dùng trong mẫu email)."""
@@ -260,10 +322,20 @@ class EautMemberStat(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         stats = super().create(vals_list)
-        # Hội viên chưa có khối số liệu thì tự tạo từ danh sách; đã có thì giữ nguyên định dạng
-        for member in stats.member_id.filtered(lambda m: not m.stats_content):
-            member.stats_content = member._default_stats_content()
+        stats.member_id._refresh_stats_content()
         return stats
+
+    def write(self, vals):
+        members = self.member_id
+        res = super().write(vals)
+        (members | self.member_id)._refresh_stats_content()
+        return res
+
+    def unlink(self):
+        members = self.member_id
+        res = super().unlink()
+        members._refresh_stats_content()
+        return res
 
 class EautMemberAward(models.Model):
     _name = 'eaut.member.award'

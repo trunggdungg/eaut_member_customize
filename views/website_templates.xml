@@ -77,6 +77,7 @@
     <template id="member_header" name="Đầu trang hội viên">
                 <t t-call="website.record_cover">
             <t t-set="_record" t-value="member"/>
+                       <t t-set="_bg" t-value="member._get_background() if json.loads(member.cover_properties).get('background-image', 'none') != 'none' else ('url(%s)' % website.image_url(member, 'banner') if member.banner else 'none')"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_size" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>

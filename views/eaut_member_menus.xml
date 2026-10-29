@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_eaut_member_root" name="Hội viên" sequence="45"
+                  web_icon="eaut_member_customize,static/description/icon.png"
               groups="group_eaut_member_manager"/>
     <menuitem id="menu_eaut_member_list" name="Hội viên" parent="menu_eaut_member_root"
               action="action_eaut_member" sequence="10"/>

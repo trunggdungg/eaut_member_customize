@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="256" height="256">
+  <defs>
+    <linearGradient id="bg-teal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B9AA0"/>
+      <stop offset="1" stop-color="#017E84"/>
+    </linearGradient>
+    <!-- cùng dải màu nền nhưng theo toạ độ của nhóm đã scale, để các nét ngăn cách trùng khít với nền -->
+    <linearGradient id="cut-teal" gradientUnits="userSpaceOnUse" x1="0" y1="-10.5" x2="0" y2="114.5">
+      <stop offset="0" stop-color="#1B9AA0"/>
+      <stop offset="1" stop-color="#017E84"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="url(#bg-teal)"/>
+  <g transform="translate(50 50) scale(0.8) translate(-50 -52)">
+    <!-- bánh răng phía sau -->
+    <polygon points="66.17,70.75 70.63,72.06 70.63,79.94 66.17,81.25 65.15,83.72 67.37,87.80 61.80,93.37 57.72,91.15 55.25,92.17 53.94,96.63 46.06,96.63 44.75,92.17 42.28,91.15 38.20,93.37 32.63,87.80 34.85,83.72 33.83,81.25 29.37,79.94 29.37,72.06 33.83,70.75 34.85,68.28 32.63,64.20 38.20,58.63 42.28,60.85 44.75,59.83 46.06,55.37 53.94,55.37 55.25,59.83 57.72,60.85 61.80,58.63 67.37,64.20 65.15,68.28" fill="#ffffff" fill-opacity="0.55"/>
+    <circle cx="50" cy="76" r="7.5" fill="url(#cut-teal)"/>
+    <!-- hai người phía sau -->
+    <g fill="#ffffff" fill-opacity="0.82" stroke="url(#cut-teal)" stroke-width="2.4" paint-order="stroke">
+      <circle cx="27.5" cy="46" r="6.6"/>
+      <path d="M15 66 v-3 a12.5 11 0 0 1 25 0 v3 z"/>
+      <circle cx="72.5" cy="46" r="6.6"/>
+      <path d="M60 66 v-3 a12.5 11 0 0 1 25 0 v3 z"/>
+    </g>
+    <!-- người ở giữa -->
+    <g fill="#ffffff" stroke="url(#cut-teal)" stroke-width="2.6" paint-order="stroke">
+      <circle cx="50" cy="40" r="8.2"/>
+      <path d="M33 68 v-4 a17 14.5 0 0 1 34 0 v4 z"/>
+    </g>
+    <!-- ba ngôi sao -->
+    <g fill="#ffffff">
+      <polygon points="26.00,15.00 27.48,18.96 31.71,19.15 28.40,21.78 29.53,25.85 26.00,23.52 22.47,25.85 23.60,21.78 20.29,19.15 24.52,18.96" fill-opacity="0.9"/>
+      <polygon points="50.00,6.10 51.83,10.99 57.04,11.21 52.96,14.46 54.35,19.49 50.00,16.61 45.65,19.49 47.04,14.46 42.96,11.21 48.17,10.99"/>
+      <polygon points="74.00,15.00 75.48,18.96 79.71,19.15 76.40,21.78 77.53,25.85 74.00,23.52 70.47,25.85 71.60,21.78 68.29,19.15 72.52,18.96" fill-opacity="0.9"/>
+    </g>
+  </g>
+</svg>

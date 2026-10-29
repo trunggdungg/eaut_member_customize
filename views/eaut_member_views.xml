@@ -88,6 +88,9 @@
         <field name="arch" type="xml">
             <form>
                <header>
+                    <button name="action_rebuild_contents" type="object" string="Tạo lại nội dung từ thông tin"
+                            confirm="Nội dung đầu trang, thẻ danh sách, khối liên hệ và số liệu sẽ được tạo lại từ thông tin hiện tại và mất các chỉnh sửa định dạng trên website. Tiếp tục?"
+                            groups="eaut_member_customize.group_eaut_member_manager"/>
                     <button name="action_send_anniversary_email" type="object"
                             string="Gửi email chúc mừng" invisible="not founding_date"
                             groups="eaut_member_customize.group_eaut_member_manager"/>
@@ -228,6 +231,15 @@
                 <chatter/>
             </form>
         </field>
+    </record>
+
+    <!-- Chạy hàng loạt từ menu Hành động của danh sách/biểu mẫu hội viên -->
+    <record id="action_server_eaut_member_rebuild_contents" model="ir.actions.server">
+        <field name="name">Tạo lại nội dung từ thông tin</field>
+        <field name="model_id" ref="model_eaut_member"/>
+        <field name="binding_model_id" ref="model_eaut_member"/>
+        <field name="state">code</field>
+        <field name="code">records.action_rebuild_contents()</field>
     </record>
 
     <record id="action_eaut_member" model="ir.actions.act_window">

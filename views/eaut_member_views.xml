@@ -96,6 +96,15 @@
                             groups="eaut_member_customize.group_eaut_member_manager"/>
                 </header>
                 <sheet>
+                    <field name="hero_customized" invisible="1"/>
+                    <field name="card_customized" invisible="1"/>
+                    <field name="contact_customized" invisible="1"/>
+                    <field name="stats_customized" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not (hero_customized or card_customized or contact_customized or stats_customized)">
+                        Một số khối nội dung trên website đã được chỉnh tay nên không tự đồng bộ theo thông tin bên dưới.
+                        Bấm <strong>Tạo lại nội dung từ thông tin</strong> để đồng bộ lại.
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
                         <field name="website_published" widget="website_redirect_button"/>

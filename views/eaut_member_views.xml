@@ -140,7 +140,7 @@
                         <group string="Thông tin chung">
                             <field name="industry_id"/>
                             <field name="representative_id"/>
-                            <field name="representative_position"/>
+                            <field name="representative_position" readonly="not representative_id"/>
                             <field name="join_date"/>
                               <field name="founding_date"/>
                             <field name="partner_id"/>

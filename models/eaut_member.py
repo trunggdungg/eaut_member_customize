@@ -38,7 +38,9 @@ class EautMember(models.Model):
     representative_id = fields.Many2one(
         'res.partner', 'Người đại diện', tracking=True,
         help='Chọn người đại diện từ danh bạ Liên hệ. Chức danh lấy từ trường Chức vụ của liên hệ.')
-    representative_position = fields.Char('Chức danh', related='representative_id.function')
+    representative_position = fields.Char(
+        'Chức danh', related='representative_id.function', readonly=False,
+        help='Đồng bộ hai chiều với trường Chức vụ của liên hệ người đại diện.')
     phone = fields.Char('Điện thoại')
     email = fields.Char('Email')
     website = fields.Char('Website')

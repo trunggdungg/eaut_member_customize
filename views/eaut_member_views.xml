@@ -50,6 +50,7 @@
                 <field name="name"/>
                 <field name="industry_id"/>
                 <field name="representative_name"/>
+                   <field name="representative_position"/>
                 <field name="website_published"/>
                 <templates>
                     <t t-name="card">
@@ -58,7 +59,7 @@
                             <div class="flex-grow-1">
                                 <field name="name" class="fw-bold fs-5"/>
                                 <div t-if="record.industry_id.raw_value"><field name="industry_id"/></div>
-                                <div t-if="record.representative_name.raw_value" class="text-muted"><field name="representative_name"/></div>
+                                <div t-if="record.representative_name.raw_value" class="text-muted"><field name="representative_name"/> <t t-if="record.representative_position.raw_value"> - <field name="representative_position"/></t></div>
                                 <span t-if="record.website_published.raw_value" class="badge text-bg-success mt-1">Đã xuất bản</span>
                                 <span t-else="" class="badge text-bg-secondary mt-1">Chưa xuất bản</span>
                             </div>
@@ -266,7 +267,7 @@
     <record id="action_eaut_member" model="ir.actions.act_window">
         <field name="name">Hội viên</field>
         <field name="res_model">eaut.member</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_eaut_member_search"/>
     </record>
 

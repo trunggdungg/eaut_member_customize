@@ -16,6 +16,10 @@ class EautMember(models.Model):
     name = fields.Char('Tên công ty', required=True, tracking=True, index=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
+    stage = fields.Selection(
+        [('new', 'Mới'), ('reviewing', 'Đang xét duyệt'), ('member', 'Hội viên')],
+        'Giai đoạn', default='new', required=True, tracking=True, index=True, copy=False,
+        group_expand='_read_group_stage')
     logo = fields.Image('Logo', max_width=512, max_height=512)
     banner = fields.Image('Ảnh bìa', max_width=1920, max_height=600)
     industry_id = fields.Many2one('eaut.member.industry', 'Ngành nghề', tracking=True)
@@ -283,6 +287,20 @@ class EautMember(models.Model):
             'params': {'title': _('Email chúc mừng'), 'message': message, 'type': kind, 'sticky': False},
         }
 
+
+    @api.model
+    def _read_group_stage(self, stages, domain):
+        # luôn hiện đủ các cột giai đoạn trong kanban
+        return [key for key, _label in self._fields['stage'].selection]
+
+    def action_set_new(self):
+        self.write({'stage': 'new'})
+
+    def action_set_reviewing(self):
+        self.write({'stage': 'reviewing'})
+
+    def action_set_member(self):
+        self.write({'stage': 'member'})
 
     def action_publish(self):
         self.write({'website_published': True})

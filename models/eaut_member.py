@@ -35,8 +35,13 @@ class EautMember(models.Model):
     card_content = fields.Html(
         'Nội dung thẻ danh sách', sanitize_attributes=False,
         help='Tên, người đại diện và ngành nghề hiển thị trên thẻ ở trang danh sách. Chỉnh trực tiếp trên website.')
-    representative_name = fields.Char('Người đại diện')
-    representative_position = fields.Char('Chức danh')
+    representative_id = fields.Many2one(
+        'res.partner', 'Liên hệ người đại diện', tracking=True,
+        help='Chọn người đại diện từ danh bạ Liên hệ. Tên và chức danh sẽ tự lấy từ liên hệ này.')
+    representative_name = fields.Char(
+        'Người đại diện', compute='_compute_representative', store=True, readonly=False)
+    representative_position = fields.Char(
+        'Chức danh', compute='_compute_representative', store=True, readonly=False)
     phone = fields.Char('Điện thoại')
     email = fields.Char('Email')
     website = fields.Char('Website')
@@ -66,6 +71,16 @@ class EautMember(models.Model):
     stats_content = fields.Html(
         'Khối số liệu nổi bật', sanitize_attributes=False,
         help='Giá trị và nhãn số liệu hiển thị ở tab Tổng quan. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
+    @api.depends('representative_id.name', 'representative_id.function')
+    def _compute_representative(self):
+        for member in self:
+            if member.representative_id:
+                member.representative_name = member.representative_id.name
+                member.representative_position = member.representative_id.function
+            else:  # không có liên hệ: giữ nguyên giá trị nhập tay
+                member.representative_name = member.representative_name
+                member.representative_position = member.representative_position
+
     @api.depends('name')
     def _compute_website_url(self):
         super()._compute_website_url()
@@ -140,7 +155,7 @@ class EautMember(models.Model):
         'stats_content': 'stats_customized',
     }
     _CONTENT_SOURCE_FIELDS = {
-        'name', 'short_description', 'representative_name', 'representative_position',
+        'name', 'short_description', 'representative_id', 'representative_name', 'representative_position',
         'industry_id', 'phone', 'email', 'website', 'address',
     }
 

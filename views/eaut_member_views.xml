@@ -35,7 +35,7 @@
                 <field name="stage" widget="badge"
                        decoration-info="stage == 'new'" decoration-warning="stage == 'reviewing'"
                        decoration-success="stage == 'member'"/>
-                <field name="website_published" widget="boolean_toggle"/>
+                <field name="website_published" widget="boolean_toggle" readonly="stage != 'member'"/>
             </list>
         </field>
     </record>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
-                        <field name="website_published" widget="website_redirect_button"/>
+                        <field name="website_published" widget="website_redirect_button" invisible="stage != 'member'"/>
                     </div>
                     <widget name="web_ribbon" title="Lưu trữ" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
@@ -146,7 +146,7 @@
                             <field name="email"/>
                             <field name="website"/>
                             <field name="address"/>
-                            <field name="website_published" string="Xuất bản" widget="boolean_toggle"/>
+                            <field name="website_published" string="Xuất bản" widget="boolean_toggle" readonly="stage != 'member'"/>
                         </group>
                     </group>
                     <notebook>

@@ -36,12 +36,9 @@ class EautMember(models.Model):
         'Nội dung thẻ danh sách', sanitize_attributes=False,
         help='Tên, người đại diện và ngành nghề hiển thị trên thẻ ở trang danh sách. Chỉnh trực tiếp trên website.')
     representative_id = fields.Many2one(
-        'res.partner', 'Liên hệ người đại diện', tracking=True,
-        help='Chọn người đại diện từ danh bạ Liên hệ. Tên và chức danh sẽ tự lấy từ liên hệ này.')
-    representative_name = fields.Char(
-        'Người đại diện', compute='_compute_representative', store=True, readonly=False)
-    representative_position = fields.Char(
-        'Chức danh', compute='_compute_representative', store=True, readonly=False)
+        'res.partner', 'Người đại diện', tracking=True,
+        help='Chọn người đại diện từ danh bạ Liên hệ. Chức danh lấy từ trường Chức vụ của liên hệ.')
+    representative_position = fields.Char('Chức danh', related='representative_id.function')
     phone = fields.Char('Điện thoại')
     email = fields.Char('Email')
     website = fields.Char('Website')
@@ -71,16 +68,6 @@ class EautMember(models.Model):
     stats_content = fields.Html(
         'Khối số liệu nổi bật', sanitize_attributes=False,
         help='Giá trị và nhãn số liệu hiển thị ở tab Tổng quan. Chỉnh trực tiếp trên website (font, cỡ chữ, màu...).')
-    @api.depends('representative_id.name', 'representative_id.function')
-    def _compute_representative(self):
-        for member in self:
-            if member.representative_id:
-                member.representative_name = member.representative_id.name
-                member.representative_position = member.representative_id.function
-            else:  # không có liên hệ: giữ nguyên giá trị nhập tay
-                member.representative_name = member.representative_name
-                member.representative_position = member.representative_position
-
     @api.depends('name')
     def _compute_website_url(self):
         super()._compute_website_url()
@@ -99,8 +86,8 @@ class EautMember(models.Model):
     def _default_card_content(self):
         self.ensure_one()
         parts = [Markup('<h5 class="eaut-card-name">%s</h5>') % escape(self.name or '')]
-        if self.representative_name:
-            text = escape(self.representative_name)
+        if self.representative_id.name:
+            text = escape(self.representative_id.name)
             if self.representative_position:
                 text = Markup('%s / %s') % (text, escape(self.representative_position))
             parts.append(Markup('<div class="eaut-badge">%s</div>') % text)
@@ -113,8 +100,8 @@ class EautMember(models.Model):
         rows = []
         if self.industry_id:
             rows.append(('fa-industry', escape(self.industry_id.name)))
-        if self.representative_name:
-            text = escape(self.representative_name)
+        if self.representative_id.name:
+            text = escape(self.representative_id.name)
             if self.representative_position:
                 text = Markup('%s - %s') % (text, escape(self.representative_position))
             rows.append(('fa-user', text))
@@ -155,7 +142,7 @@ class EautMember(models.Model):
         'stats_content': 'stats_customized',
     }
     _CONTENT_SOURCE_FIELDS = {
-        'name', 'short_description', 'representative_id', 'representative_name', 'representative_position',
+        'name', 'short_description', 'representative_id',
         'industry_id', 'phone', 'email', 'website', 'address',
     }
 

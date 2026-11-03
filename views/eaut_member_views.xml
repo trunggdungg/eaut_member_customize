@@ -32,7 +32,10 @@
                 <field name="representative_position"/>
                 <field name="phone"/>
                 <field name="email"/>
-                <field name="website_published" widget="boolean_toggle"/>
+                                <field name="stage" widget="badge"
+                       decoration-info="stage == 'new'" decoration-warning="stage == 'reviewing'"
+                       decoration-success="stage == 'member'"/>
+               <field name="website_published" widget="boolean_toggle" readonly="stage != 'member'"/>
             </list>
         </field>
     </record>
@@ -41,8 +44,9 @@
         <field name="name">eaut.member.kanban</field>
         <field name="model">eaut.member</field>
         <field name="arch" type="xml">
-            <kanban>
+           <kanban default_group_by="stage" group_create="false" group_delete="false">
                 <field name="id"/>
+                  <field name="stage"/>
                 <field name="name"/>
                 <field name="industry_id"/>
                 <field name="representative_name"/>
@@ -72,10 +76,15 @@
             <search>
                 <field name="name" string="Hội viên" filter_domain="['|', ('name', 'ilike', self), ('representative_name', 'ilike', self)]"/>
                 <field name="industry_id"/>
+                    <filter name="stage_new" string="Mới" domain="[('stage', '=', 'new')]"/>
+                <filter name="stage_reviewing" string="Đang xét duyệt" domain="[('stage', '=', 'reviewing')]"/>
+                <filter name="stage_member" string="Hội viên" domain="[('stage', '=', 'member')]"/>
+                <separator/>
                 <filter name="published" string="Đã xuất bản" domain="[('website_published', '=', True)]"/>
                 <filter name="unpublished" string="Chưa xuất bản" domain="[('website_published', '=', False)]"/>
                 <filter name="archived" string="Đã lưu trữ" domain="[('active', '=', False)]"/>
                 <group>
+                       <filter name="group_stage" string="Giai đoạn" context="{'group_by': 'stage'}"/>
                     <filter name="group_industry" string="Ngành nghề" context="{'group_by': 'industry_id'}"/>
                 </group>
             </search>
@@ -88,6 +97,7 @@
         <field name="arch" type="xml">
             <form>
                <header>
+                    <field name="stage" widget="statusbar" options="{'clickable': '1'}"/>
                      <button name="action_rebuild_contents" type="object" string="Đồng bộ thông tin"
                             confirm="Nội dung đầu trang, thẻ danh sách, khối liên hệ và số liệu sẽ được tạo lại từ thông tin hiện tại và mất các chỉnh sửa định dạng trên website. Tiếp tục?"
                             groups="eaut_member_customize.group_eaut_member_manager"/>
@@ -107,7 +117,7 @@
                     </div>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
-                        <field name="website_published" widget="website_redirect_button"/>
+                         <field name="website_published" widget="website_redirect_button" invisible="stage != 'member'"/>
                     </div>
                     <widget name="web_ribbon" title="Lưu trữ" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
@@ -130,7 +140,7 @@
                             <field name="email"/>
                             <field name="website"/>
                             <field name="address"/>
-                            <field name="website_published" string="Xuất bản" widget="boolean_toggle"/>
+                            <field name="website_published" string="Xuất bản" widget="boolean_toggle" readonly="stage != 'member'"/>
                         </group>
                     </group>
                     <notebook>
@@ -235,6 +245,9 @@
                                 </list>
                             </field>
                         </page>
+                          <page string="Ghi chú nội bộ">
+                            <field name="internal_note"/>
+                          </page>
                     </notebook>
                 </sheet>
                 <chatter/>

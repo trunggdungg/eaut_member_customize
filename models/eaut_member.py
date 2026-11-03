@@ -3,6 +3,7 @@ import logging
 from markupsafe import Markup, escape
 
 from odoo import api, fields, models ,_
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -16,6 +17,10 @@ class EautMember(models.Model):
     name = fields.Char('Tên công ty', required=True, tracking=True, index=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
+    stage = fields.Selection(
+        [('new', 'Mới'), ('reviewing', 'Đang xét duyệt'), ('member', 'Hội viên')],
+        'Giai đoạn', default='new', required=True, tracking=True, index=True, copy=False,
+        group_expand='_read_group_stage')
     logo = fields.Image('Logo', max_width=512, max_height=512)
     banner = fields.Image('Ảnh bìa', max_width=1920, max_height=600)
     industry_id = fields.Many2one('eaut.member.industry', 'Ngành nghề', tracking=True)
@@ -51,6 +56,7 @@ class EautMember(models.Model):
     post_ids = fields.One2many('eaut.member.post', 'member_id', 'Bài viết')
     gallery_ids = fields.One2many('eaut.member.gallery', 'member_id', 'Thư viện ảnh')
     contact_request_ids = fields.One2many('eaut.member.contact.request', 'member_id', 'Yêu cầu liên hệ')
+    internal_note = fields.Html(string="Ghi chú nội bộ")
 
     stat_ids = fields.One2many('eaut.member.stat', 'member_id', 'Số liệu nổi bật')
     award_ids = fields.One2many('eaut.member.award', 'member_id', 'Chứng nhận / Giải thưởng')
@@ -189,10 +195,19 @@ class EautMember(models.Model):
         members._refresh_default_contents()
         return members
 
+    @api.constrains('website_published', 'stage')
+    def _check_publish_stage(self):
+        for member in self:
+            if member.website_published and member.stage != 'member':
+                raise ValidationError(_(
+                    'Chỉ hội viên ở giai đoạn "Hội viên" mới được xuất bản lên website: %s', member.name))
+
     def write(self, vals):
         if self.env.context.get('eaut_auto_content'):
             return super().write(vals)
         vals = dict(vals)
+        if vals.get('stage', 'member') != 'member' and 'website_published' not in vals:
+            vals['website_published'] = False  # rời giai đoạn Hội viên thì tự gỡ khỏi website
         for field, flag in self._CONTENT_FLAGS.items():
             if field in vals:
                 vals.setdefault(flag, True)  # ghi trực tiếp (ví dụ từ website builder) = đã chỉnh tay
@@ -282,6 +297,21 @@ class EautMember(models.Model):
             'tag': 'display_notification',
             'params': {'title': _('Email chúc mừng'), 'message': message, 'type': kind, 'sticky': False},
         }
+
+
+    @api.model
+    def _read_group_stage(self, stages, domain):
+        # luôn hiện đủ các cột giai đoạn trong kanban
+        return [key for key, _label in self._fields['stage'].selection]
+
+    def action_set_new(self):
+        self.write({'stage': 'new'})
+
+    def action_set_reviewing(self):
+        self.write({'stage': 'reviewing'})
+
+    def action_set_member(self):
+        self.write({'stage': 'member'})
 
 
     def action_publish(self):

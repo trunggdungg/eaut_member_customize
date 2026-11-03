@@ -28,7 +28,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="industry_id"/>
-                <field name="representative_name"/>
+                          <field name="representative_id"/>
                 <field name="representative_position"/>
                 <field name="phone"/>
                 <field name="email"/>
@@ -49,7 +49,7 @@
                   <field name="stage"/>
                 <field name="name"/>
                 <field name="industry_id"/>
-                <field name="representative_name"/>
+                            <field name="representative_id"/>
                    <field name="representative_position"/>
                 <field name="website_published"/>
                 <templates>
@@ -59,7 +59,8 @@
                             <div class="flex-grow-1">
                                 <field name="name" class="fw-bold fs-5"/>
                                 <div t-if="record.industry_id.raw_value"><field name="industry_id"/></div>
-                                <div t-if="record.representative_name.raw_value" class="text-muted"><field name="representative_name"/> <t t-if="record.representative_position.raw_value"> - <field name="representative_position"/></t></div>
+                                    <div t-if="record.representative_id.raw_value" class="text-muted">
+                                    <field name="representative_id"/><t t-if="record.representative_position.raw_value"> - <field name="representative_position"/></t></div>
                                 <span t-if="record.website_published.raw_value" class="badge text-bg-success mt-1">Đã xuất bản</span>
                                 <span t-else="" class="badge text-bg-secondary mt-1">Chưa xuất bản</span>
                             </div>
@@ -75,7 +76,7 @@
         <field name="model">eaut.member</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Hội viên" filter_domain="['|', ('name', 'ilike', self), ('representative_name', 'ilike', self)]"/>
+                     <field name="name" string="Hội viên" filter_domain="['|', ('name', 'ilike', self), ('representative_id', 'ilike', self)]"/>
                 <field name="industry_id"/>
                     <filter name="stage_new" string="Mới" domain="[('stage', '=', 'new')]"/>
                 <filter name="stage_reviewing" string="Đang xét duyệt" domain="[('stage', '=', 'reviewing')]"/>
@@ -130,8 +131,8 @@
                     <group>
                         <group string="Thông tin chung">
                             <field name="industry_id"/>
-                            <field name="representative_name"/>
-                            <field name="representative_position"/>
+                          <field name="representative_id"/>
+               <field name="representative_position" readonly="not representative_id"/>
                             <field name="join_date"/>
                               <field name="founding_date"/>
                             <field name="partner_id"/>

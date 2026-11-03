@@ -32,7 +32,9 @@ class EautMemberController(http.Controller):
             domain.append(('industry_id', '=', industry_id))
             url_args['industry'] = industry_id
         if search:
-            domain += ['|', ('name', 'ilike', search), ('representative_name', 'ilike', search)]
+            # khách không đọc được res.partner nên tìm người đại diện bằng sudo
+            partners = request.env['res.partner'].sudo().search([('name', 'ilike', search)])
+            domain += ['|', ('name', 'ilike', search), ('representative_id', 'in', partners.ids)]
             url_args['search'] = search
         if order not in MEMBER_SORTS:
             order = 'default'

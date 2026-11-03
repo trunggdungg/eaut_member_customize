@@ -35,14 +35,18 @@ class EautMember(models.Model):
     card_content = fields.Html(
         'Nội dung thẻ danh sách', sanitize_attributes=False,
         help='Tên, người đại diện và ngành nghề hiển thị trên thẻ ở trang danh sách. Chỉnh trực tiếp trên website.')
-    representative_name = fields.Char('Người đại diện')
-    representative_position = fields.Char('Chức danh')
+    representative_id = fields.Many2one(
+        'res.partner', 'Người đại diện', tracking=True,
+        help='Chọn người đại diện từ danh bạ Liên hệ. Chức danh lấy từ trường Chức vụ của liên hệ.')
+    representative_position = fields.Char(
+        'Chức danh', related='representative_id.function', readonly=False,
+        help='Đồng bộ hai chiều với trường Chức vụ của liên hệ người đại diện.')
     phone = fields.Char('Điện thoại')
     email = fields.Char('Email')
     website = fields.Char('Website')
     address = fields.Char('Địa chỉ')
     join_date = fields.Date('Ngày gia nhập')
-    partner_id = fields.Many2one('res.partner', 'Liên hệ liên kết')
+    partner_id = fields.Many2one('res.partner', 'Liên hệ phụ')
 
     founding_date = fields.Date(
         'Ngày thành lập', tracking=True,
@@ -85,8 +89,8 @@ class EautMember(models.Model):
     def _default_card_content(self):
         self.ensure_one()
         parts = [Markup('<h5 class="eaut-card-name">%s</h5>') % escape(self.name or '')]
-        if self.representative_name:
-            text = escape(self.representative_name)
+        if self.representative_id.name:
+            text = escape(self.representative_id.name)
             if self.representative_position:
                 text = Markup('%s / %s') % (text, escape(self.representative_position))
             parts.append(Markup('<div class="eaut-badge">%s</div>') % text)
@@ -99,8 +103,8 @@ class EautMember(models.Model):
         rows = []
         if self.industry_id:
             rows.append(('fa-industry', escape(self.industry_id.name)))
-        if self.representative_name:
-            text = escape(self.representative_name)
+        if self.representative_id.name:
+            text = escape(self.representative_id.name)
             if self.representative_position:
                 text = Markup('%s - %s') % (text, escape(self.representative_position))
             rows.append(('fa-user', text))
@@ -141,7 +145,7 @@ class EautMember(models.Model):
         'stats_content': 'stats_customized',
     }
     _CONTENT_SOURCE_FIELDS = {
-        'name', 'short_description', 'representative_name', 'representative_position',
+        'name', 'short_description', 'representative_id',
         'industry_id', 'phone', 'email', 'website', 'address',
     }
 
